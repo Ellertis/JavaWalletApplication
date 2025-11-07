@@ -1,0 +1,11 @@
+org\example\Currency.class
+org\example\WalletManager.class
+org\example\TransactionStatus.class
+org\example\Main.class
+org\example\TransactionMapperImpl.class
+org\example\Transaction.class
+org\example\TransactionManager.class
+org\example\ConversionRates.class
+org\example\TransactionMapper.class
+org\example\Wallet.class
+org\example\InputTransaction.class
