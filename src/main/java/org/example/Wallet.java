@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class Wallet {
+public class Wallet implements WalletActions {
 
     //BALANCE
     public float Balance;
@@ -15,8 +15,13 @@ public class Wallet {
 
     public List<Transaction> TransactionList = new ArrayList<>();
 
-    public void AddTransactionToList(Transaction NewTransaction){
-        TransactionList.add(TransactionList.toArray().length, NewTransaction);
-        return;
+    @Override
+    public void Deposit(float amount){
+        Balance += amount;
+    }
+
+    @Override
+    public void Withdraw(float amount){
+        Balance -= amount;
     }
 }

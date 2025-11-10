@@ -8,8 +8,8 @@ import java.time.LocalDate;
 import java.util.Arrays;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
+//@AllArgsConstructor
+//@NoArgsConstructor
 public class Transaction {
 
     public TransactionStatus status;

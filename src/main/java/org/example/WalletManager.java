@@ -4,6 +4,7 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Data
 public class WalletManager {
@@ -13,28 +14,36 @@ public class WalletManager {
 
     //receive transaction to determine if funds should be sent or received
     public void ProcessTransaction(Transaction NewTransaction){
-
-        SetWallets(NewTransaction);
-        CheckCurrency(NewTransaction,senderWallet);
-        CheckCurrency(NewTransaction,receiverWallet);
-        ProcessFunds(NewTransaction,senderWallet,receiverWallet);
-        SaveTransaction(NewTransaction,senderWallet);
-        SaveTransaction(NewTransaction,receiverWallet);
-
+        System.out.println("Status: "+NewTransaction.getStatus());
+        try {
+            SetWallets(NewTransaction);
+            CheckCurrency(NewTransaction, senderWallet);
+            CheckCurrency(NewTransaction, receiverWallet);
+            if (CheckBalance(NewTransaction, senderWallet)) {
+                throw new ArithmeticException(("Transaction is not processed further, inssuficient funds " +
+                        "Sender Balance: " + senderWallet.getBalance()));
+            }
+        } catch(ArithmeticException e) {
+            System.out.println("Transaction Failed");
+            NewTransaction.setStatus(TransactionStatus.Failed);
+            SaveTransaction(NewTransaction, senderWallet, receiverWallet,false);
+            return;
+        }
+        SaveTransaction(NewTransaction, senderWallet, receiverWallet,true);
     }
 
     public void SetWallets(Transaction NewTransaction){
-        senderWallet = FindWallet(NewTransaction, NewTransaction.getSenderReceiver()[1]);
-        receiverWallet = FindWallet(NewTransaction, NewTransaction.getSenderReceiver()[0]);
+        senderWallet = FindWallet(NewTransaction.getSenderReceiver()[0]);
+        receiverWallet = FindWallet(NewTransaction.getSenderReceiver()[1]);
     }
 
-    public Wallet FindWallet(Transaction NewTransaction,String WalletName){
+    public Wallet FindWallet(String WalletName){
         for(Wallet wallet : Wallets){
             if(wallet.getName().equals(WalletName)){
                 return wallet;
             }
         }
-        Wallet NewWallet = CreateNewWallet(0f,Currency.Euro,WalletName);
+        Wallet NewWallet = CreateNewWallet(GetRandomAmount(300),Currency.Euro,WalletName);
         Wallets.add(NewWallet);
         return NewWallet;
     }
@@ -51,22 +60,31 @@ public class WalletManager {
         if (!NewTransaction.getCurrency().equals(wallet.getCurrency())) {
             ConvertFunds(NewTransaction,wallet);
         }
-        return;
-    }
-
-    public void ProcessFunds(Transaction NewTransaction,Wallet senderWallet,Wallet receiverWallet){
-        senderWallet.Balance += NewTransaction.getAmount();
-        receiverWallet.Balance -= NewTransaction.getAmount();
     }
 
     public void ConvertFunds(Transaction NewTransaction,Wallet wallet){
         wallet.Balance = new ConversionRates().ConvertFunds(NewTransaction.getCurrency(),wallet.Currency, wallet.Balance);
     }
 
-    public void SaveTransaction(Transaction NewTransaction,Wallet wallet){
+    public void SaveTransaction(Transaction NewTransaction,Wallet wallet,Wallet wallet2,boolean bSuccess){
         wallet.TransactionList.add(NewTransaction);
-        NewTransaction.setStatus(TransactionStatus.Processed);
-        System.out.print("Transaction saved of amount: " + NewTransaction.getAmount()+" | Wallet: "+ wallet.getName() + " | New Amount: "+ wallet.getBalance());
+        if(bSuccess)
+            NewTransaction.setStatus(TransactionStatus.Processed);
+        System.out.println("Transaction saved: "+"Amount :" + NewTransaction.getAmount()+
+                " | Wallet: "+ wallet.getName()+
+                " | New Amount: "+ wallet.getBalance()+
+                " | TO: "+
+                " | Wallet: "+ wallet2.getName()+
+                " | New Amount: "+ wallet2.getBalance()+
+                " Status: "+ NewTransaction.getStatus());
+    }
+
+    public boolean CheckBalance(Transaction newTransaction, Wallet wallet) {
+        return (newTransaction.getAmount() > wallet.getBalance());
+    }
+
+    public static int GetRandomAmount(int maxRange){
+        return ThreadLocalRandom.current().nextInt(maxRange);
     }
 
     public void RejectTransaction(Transaction NewTransaction,String Reason){

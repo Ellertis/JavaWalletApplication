@@ -3,6 +3,7 @@ org\example\WalletManager.class
 org\example\TransactionStatus.class
 org\example\Main.class
 org\example\TransactionMapperImpl.class
+org\example\WalletActions.class
 org\example\Transaction.class
 org\example\TransactionManager.class
 org\example\ConversionRates.class

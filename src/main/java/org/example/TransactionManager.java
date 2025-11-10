@@ -1,8 +1,6 @@
 package org.example;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 public class TransactionManager {
     static WalletManager walletManager = new WalletManager();
