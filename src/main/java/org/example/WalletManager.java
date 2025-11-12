@@ -12,7 +12,6 @@ public class WalletManager {
     private Wallet receiverWallet;
     public static List<Wallet> Wallets = new ArrayList<>();
 
-    //receive transaction to determine if funds should be sent or received
     public void ProcessTransaction(Transaction NewTransaction){
         System.out.println("Status: "+NewTransaction.getStatus());
         try {
@@ -20,7 +19,7 @@ public class WalletManager {
             CheckCurrency(NewTransaction, senderWallet);
             CheckCurrency(NewTransaction, receiverWallet);
             if (CheckBalance(NewTransaction, senderWallet)) {
-                throw new ArithmeticException(("Transaction is not processed further, inssuficient funds " +
+                throw new ArithmeticException(("Transaction is not processed further, insufficient funds " +
                         "Sender Balance: " + senderWallet.getBalance()));
             }
         } catch(ArithmeticException e) {

@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="WalletApplication:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/WalletApplication_jar</output-path>
+    <root id="archive" name="WalletApplication.jar">
+      <element id="module-output" name="WalletApplication" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.6.3/mapstruct-1.6.3.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
