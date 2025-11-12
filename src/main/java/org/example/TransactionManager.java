@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 public class TransactionManager {
     static WalletManager walletManager = new WalletManager();
+    static TransactionProcessor transactionProcessor = new TransactionProcessor();
 
     public static Transaction CreateNewTransaction(TransactionStatus NewTransactionStatus, String[] SenderReceiver, float Amount, Currency NewTransactionCurrency, LocalDate Date, boolean bPrintDetails){
         Transaction NewTransaction = new Transaction();
@@ -35,7 +36,7 @@ public class TransactionManager {
 
     public void SendTransaction(Transaction NewTransaction){
         NewTransaction.setStatus(TransactionStatus.BeingProcessed);
-        walletManager.ProcessTransaction(NewTransaction);
+        transactionProcessor.ProcessTransaction(NewTransaction);
     }
 
 }
