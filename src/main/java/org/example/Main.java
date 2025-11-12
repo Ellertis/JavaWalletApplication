@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 import java.util.concurrent.ThreadLocalRandom;
+import java.io.*;
 
 public class Main {
     public static List<String> CustomersList = new ArrayList<>(List.of("Amadou","Emils","Tomas","Ivan"));
@@ -42,4 +43,5 @@ public class Main {
     public static int GetRandomAmount(int maxRange){
         return ThreadLocalRandom.current().nextInt(maxRange);
     }
+
 }
