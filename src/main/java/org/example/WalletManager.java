@@ -8,18 +8,18 @@ import java.util.concurrent.ThreadLocalRandom;
 public class WalletManager {
     public static List<Wallet> Wallets = new ArrayList<>();
 
-    public Wallet FindWallet(String WalletName){
+    public Wallet findWallet(String WalletName){
         for(Wallet wallet : Wallets){
             if(wallet.getName().equals(WalletName)){
                 return wallet;
             }
         }
-        Wallet NewWallet = CreateNewWallet(ThreadLocalRandom.current().nextInt(300),Currency.Euro,WalletName);
+        Wallet NewWallet = createNewWallet(ThreadLocalRandom.current().nextInt(300),Currency.Euro,WalletName);
         Wallets.add(NewWallet);
         return NewWallet;
     }
 
-    public Wallet CreateNewWallet(float balance,Currency currency,String name){
+    public Wallet createNewWallet(float balance, Currency currency, String name){
         Wallet wallet = new Wallet();
         wallet.setBalance(balance);
         wallet.setName(name);

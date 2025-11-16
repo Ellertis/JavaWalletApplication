@@ -6,7 +6,7 @@ public class TransactionManager {
     static WalletManager walletManager = new WalletManager();
     static TransactionProcessor transactionProcessor = new TransactionProcessor();
 
-    public static Transaction CreateNewTransaction(TransactionStatus NewTransactionStatus, String[] SenderReceiver, float Amount, Currency NewTransactionCurrency, LocalDate Date, boolean bPrintDetails){
+    public static Transaction createNewTransaction(TransactionStatus NewTransactionStatus, String[] SenderReceiver, float Amount, Currency NewTransactionCurrency, LocalDate Date, boolean bPrintDetails){
         Transaction NewTransaction = new Transaction();
 
         NewTransaction.setStatus(NewTransactionStatus);
@@ -34,9 +34,9 @@ public class TransactionManager {
         return NewTransaction;
     }
 
-    public void SendTransaction(Transaction NewTransaction){
+    public void sendTransaction(Transaction NewTransaction){
         NewTransaction.setStatus(TransactionStatus.BeingProcessed);
-        transactionProcessor.ProcessTransaction(NewTransaction);
+        transactionProcessor.processTransaction(NewTransaction);
     }
 
 }

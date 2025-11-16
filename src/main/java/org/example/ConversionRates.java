@@ -10,7 +10,7 @@ public class ConversionRates {
     public float USDtoEUR(float USD){
         return USD * USDtoEURrate;
     }
-    public float ConvertFunds(Currency from, Currency to, float amount){
+    public float convertFunds(Currency from, Currency to, float amount){
         if (from == Currency.Euro & to == Currency.Dollar){
             return EURtoUSD(amount);
         } else if (from == Currency.Dollar & to == Currency.Euro) {

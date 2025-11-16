@@ -16,12 +16,12 @@ public class Wallet implements WalletActions {
     public List<Transaction> TransactionList = new ArrayList<>();
 
     @Override
-    public void Deposit(float amount){
+    public void deposit(float amount){
         Balance += amount;
     }
 
     @Override
-    public void Withdraw(float amount){
+    public void withdraw(float amount){
         Balance -= amount;
     }
 }

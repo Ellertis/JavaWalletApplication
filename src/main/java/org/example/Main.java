@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 import java.util.concurrent.ThreadLocalRandom;
-import java.io.*;
 
 public class Main {
     public static List<String> CustomersList = new ArrayList<>(List.of("Amadou","Emils","Tomas","Ivan"));
@@ -15,8 +14,8 @@ public class Main {
         //StreamGenerateTransactions(10);
 
         Runnable task = () -> {
-            Transaction NewTransaction = TransactionManager.CreateNewTransaction(TransactionStatus.randomTransactionStatus(),new String[]{GetRandomCustomer(),GetRandomCustomer()},GetRandomAmount(269), Currency.Euro,LocalDate.now(),true);
-            TrsMngr.SendTransaction(NewTransaction);
+            Transaction NewTransaction = TransactionManager.createNewTransaction(TransactionStatus.randomTransactionStatus(),new String[]{getRandomCustomer(), getRandomCustomer()}, getRandomAmount(269), Currency.Euro,LocalDate.now(),true);
+            TrsMngr.sendTransaction(NewTransaction);
         };
         while (true){
             task.run();
@@ -29,18 +28,18 @@ public class Main {
         }
     }
 
-    static void StreamGenerateTransactions(int limit) {
+    static void streamGenerateTransactions(int limit) {
         Stream<Transaction> streamGenerated =
-                Stream.generate(() -> TransactionManager.CreateNewTransaction(TransactionStatus.UnProcessed,new String[]{GetRandomCustomer(),GetRandomCustomer()},GetRandomAmount(269), Currency.Euro,LocalDate.now(),true)).limit(limit);
-        streamGenerated.forEach(t -> {TrsMngr.SendTransaction(t);});
+                Stream.generate(() -> TransactionManager.createNewTransaction(TransactionStatus.UnProcessed,new String[]{getRandomCustomer(), getRandomCustomer()}, getRandomAmount(269), Currency.Euro,LocalDate.now(),true)).limit(limit);
+        streamGenerated.forEach(t -> {TrsMngr.sendTransaction(t);});
     }
 
-    public static String GetRandomCustomer(){
+    public static String getRandomCustomer(){
         int rngId = ThreadLocalRandom.current().nextInt(CustomersList.size());
         return CustomersList.get(rngId);
     }
 
-    public static int GetRandomAmount(int maxRange){
+    public static int getRandomAmount(int maxRange){
         return ThreadLocalRandom.current().nextInt(maxRange);
     }
 

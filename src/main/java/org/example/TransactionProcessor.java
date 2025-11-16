@@ -12,59 +12,59 @@ public class TransactionProcessor {
     private Wallet senderWallet;
     private Wallet receiverWallet;
 
-    public void SetWallets(Transaction NewTransaction){
-        senderWallet = TransactionManager.walletManager.FindWallet(NewTransaction.getSenderReceiver()[0]);
-        receiverWallet = TransactionManager.walletManager.FindWallet(NewTransaction.getSenderReceiver()[1]);
+    public void setWallets(Transaction NewTransaction){
+        senderWallet = TransactionManager.walletManager.findWallet(NewTransaction.getSenderReceiver()[0]);
+        receiverWallet = TransactionManager.walletManager.findWallet(NewTransaction.getSenderReceiver()[1]);
     }
 
-    public void CheckCurrency(Transaction NewTransaction,Wallet wallet){
+    public void checkCurrency(Transaction NewTransaction, Wallet wallet){
         if (!NewTransaction.getCurrency().equals(wallet.getCurrency())) {
-            ConvertFunds(NewTransaction,wallet);
+            convertFunds(NewTransaction,wallet);
         }
     }
 
-    public void ConvertFunds(Transaction NewTransaction,Wallet wallet){
-        wallet.Balance = new ConversionRates().ConvertFunds(NewTransaction.getCurrency(),wallet.Currency, wallet.Balance);
+    public void convertFunds(Transaction NewTransaction, Wallet wallet){
+        wallet.Balance = new ConversionRates().convertFunds(NewTransaction.getCurrency(),wallet.Currency, wallet.Balance);
     }
 
-    public boolean CheckBalance(Transaction newTransaction, Wallet wallet) {
+    public boolean checkBalance(Transaction newTransaction, Wallet wallet) {
         return (newTransaction.getAmount() > wallet.getBalance());
     }
 
-    public void ProcessTransaction(Transaction NewTransaction) {
+    public void processTransaction(Transaction NewTransaction) {
         System.out.println("Status: " + NewTransaction.getStatus());
 
-        SetWallets(NewTransaction);
+        setWallets(NewTransaction);
         if (senderWallet == receiverWallet) {
             System.out.println("Transaction is not processed further, the sender and receiver are the same");
             NewTransaction.setStatus(TransactionStatus.Failed);
             return;
         }
 
-        CheckCurrency(NewTransaction, senderWallet);
-        CheckCurrency(NewTransaction, receiverWallet);
+        checkCurrency(NewTransaction, senderWallet);
+        checkCurrency(NewTransaction, receiverWallet);
 
         try {
-            if (CheckBalance(NewTransaction, senderWallet))
+            if (checkBalance(NewTransaction, senderWallet))
                 throw new ArithmeticException(("Transaction is not processed further, insufficient funds " + "Sender Balance: " + senderWallet.getBalance()));}
         //Transaction Failed
         catch (ArithmeticException e) {
             System.out.println("Transaction Failed");
             NewTransaction.setStatus(TransactionStatus.Failed);
             //Saving Failed Transactions
-            SaveTransaction(NewTransaction, senderWallet, receiverWallet, false);
+            saveTransaction(NewTransaction, senderWallet, receiverWallet, false);
             return;
         }
 
         //Transaction Succes
-        senderWallet.Withdraw(NewTransaction.getAmount());
-        receiverWallet.Deposit(NewTransaction.getAmount());
+        senderWallet.withdraw(NewTransaction.getAmount());
+        receiverWallet.deposit(NewTransaction.getAmount());
 
         //Saving Successful Transactions
-        SaveTransaction(NewTransaction, senderWallet, receiverWallet, true);
+        saveTransaction(NewTransaction, senderWallet, receiverWallet, true);
     }
 
-    public void SaveTransaction(Transaction NewTransaction,Wallet wallet,Wallet wallet2,boolean bSuccess){
+    public void saveTransaction(Transaction NewTransaction, Wallet wallet, Wallet wallet2, boolean bSuccess){
         wallet.TransactionList.add(NewTransaction);
         if(bSuccess)
             NewTransaction.setStatus(TransactionStatus.Processed);
@@ -76,14 +76,14 @@ public class TransactionProcessor {
                 " | New Amount: "+ wallet2.getBalance()+
                 " Status: "+ NewTransaction.getStatus());
         try {
-            WriteToSaveFile(NewTransaction, senderWallet, receiverWallet);
+            writeToSaveFile(NewTransaction, senderWallet, receiverWallet);
         }
         catch (IOException ex) {
             throw new RuntimeException(ex);
         }
     }
 
-    public static void WriteToSaveFile(Transaction TransactionToWrite,Wallet wallet1,Wallet wallet2) throws IOException {
+    public static void writeToSaveFile(Transaction TransactionToWrite, Wallet wallet1, Wallet wallet2) throws IOException {
         float Amount = TransactionToWrite.getAmount();
         LocalDate Date = TransactionToWrite.getDate();
         TransactionStatus Status = TransactionToWrite.getStatus();
